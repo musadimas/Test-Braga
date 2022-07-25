@@ -1,0 +1,53 @@
+import clsx from "clsx";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { IKabkot } from "../../interfaces";
+
+interface ISelect {
+  id: string;
+  label?: string;
+  selected: string | null;
+  placeholder?: string;
+  isLoading: boolean;
+  data?: { value: string; name: string }[] | null;
+  onChange: (e:ChangeEvent<HTMLInputElement>) => void;
+}
+
+export const Select: FC<ISelect> = ({ id, label, placeholder, isLoading, data, onChange, selected }) => {
+  const [toggle, setToggle] = useState<boolean>(false);
+
+  return (
+    <div className='flex flex-col space-y-3'>
+      {label && (
+        <h1 className='text-sm font-semibold'>
+          {label} <span className='text-[#F81515]'>*</span>
+        </h1>
+      )}
+      <div className='relative'>
+        <button
+          type='button'
+          onClick={() => setToggle((current) => (current === true ? false : true))}
+          className='relative w-full flex items-center justify-between cursor-pointer rounded-lg bg-white py-2 px-4 h-10 border text-left outline-green-500'
+        >
+          {selected === "" ? placeholder : selected}
+          <img src='/icons/arrow-down.svg' alt='Dropdown Icon' />
+        </button>
+        <div id={id} className={clsx(["border rounded-md w-full bg-white overflow-y-auto h-52", { "absolute top-11": toggle, hidden: !toggle }])} onChange={onChange}>
+          {!isLoading &&
+            data &&
+            data.map((item, i) => (
+              <option
+                value={item.value}
+                key={i}
+                className='cursor-pointer px-4 py-2 h-10 hover:bg-green-400 bg-origin-content rounded-md hover:border-green-500'
+                onClick={() => {
+                  setToggle((current) => (current === true ? false : true));
+                }}
+              >
+                {item.name}
+              </option>
+            ))}
+        </div>
+      </div>
+    </div>
+  );
+};
