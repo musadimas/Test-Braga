@@ -12,7 +12,7 @@ interface IAuth {
 function App() {
   const sessionAuth = sessionStorage.getItem("auth");
   const initialState = () => JSON.parse(sessionAuth as string);
-  const [auth, setAuth] = useState<IAuth>(initialState);
+  const [auth, setAuth] = useState<IAuth>(sessionAuth ? initialState : { type: null, status: false });
 
   return (
     <Router>
